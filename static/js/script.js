@@ -1,128 +1,95 @@
 // Add any client-side JavaScript functionality here
 document.addEventListener('DOMContentLoaded', function() {
     const citySelect = document.getElementById('city-select');
-    const weatherCard = document.getElementById('weather-card');
-    const cityName = document.getElementById('city-name');
-    const weatherIcon = document.getElementById('weather-icon');
-    const temperature = document.getElementById('temperature');
-    const feelsLike = document.getElementById('feels-like');
-    const humidity = document.getElementById('humidity');
-    const windSpeed = document.getElementById('wind-speed');
-    const description = document.getElementById('description');
+    const weatherInfo = document.getElementById('weather-info');
     const loading = document.getElementById('loading');
-    const errorMessage = document.getElementById('error-message');
     const lastUpdated = document.getElementById('last-updated');
-
     let updateInterval;
-    const UPDATE_INTERVAL = 5 * 60 * 1000; // 5 minutes in milliseconds
 
     citySelect.addEventListener('change', function() {
         const selectedCity = this.value;
         if (selectedCity) {
-            getWeatherForCity(selectedCity);
-            // Clear any existing interval and set a new one
+            fetchWeatherData(selectedCity);
+            // Clear existing interval and set a new one
             clearInterval(updateInterval);
-            updateInterval = setInterval(() => getWeatherForCity(selectedCity), UPDATE_INTERVAL);
+            updateInterval = setInterval(() => fetchWeatherData(selectedCity), 5 * 60 * 1000); // 5 minutes
         } else {
-            hideWeatherCard();
+            weatherInfo.innerHTML = '';
+            weatherInfo.classList.add('hidden');
+            lastUpdated.textContent = '';
             clearInterval(updateInterval);
         }
     });
 
-    function getWeatherForCity(city) {
-        const csrfToken = document.querySelector('input[name="csrf_token"]').value;
-        
-        showLoading();
-        hideError();
+    function fetchWeatherData(city) {
+        loading.classList.remove('hidden');
+        weatherInfo.classList.add('hidden');
+        weatherInfo.innerHTML = '';
 
         fetch('/get_weather', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-CSRFToken': csrfToken
-            },
-            body: `city=${encodeURIComponent(city)}`
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'city=' + encodeURIComponent(city)
         })
         .then(response => response.json())
         .then(data => {
+            loading.classList.add('hidden');
             if (data.error) {
-                throw new Error(data.error);
+                showError(data.error);
+            } else {
+                displayWeatherData(data);
             }
-            displayWeather(data);
-            updateLastUpdatedTime();
         })
         .catch(error => {
-            showError(`Error fetching weather data: ${error.message}`);
-            console.error('Error:', error);
-        })
-        .finally(() => {
-            hideLoading();
+            loading.classList.add('hidden');
+            showError(error.message);
         });
     }
 
-    function displayWeather(data) {
-        cityName.textContent = data.city;
-        temperature.textContent = `${Math.round(data.temperature)}°C`;
-        feelsLike.textContent = `Feels like: ${Math.round(data.feels_like)}°C`;
-        humidity.textContent = `Humidity: ${data.humidity}%`;
-        windSpeed.textContent = `Wind: ${data.wind_speed} m/s`;
-        description.textContent = data.description;
-        weatherIcon.className = `fas ${getWeatherIcon(data.weather_condition)}`;
-        
-        showWeatherCard();
-    }
-
-    function getWeatherIcon(condition) {
-        const iconMap = {
-            'Clear': 'fa-sun',
-            'Clouds': 'fa-cloud',
-            'Rain': 'fa-cloud-rain',
-            'Thunderstorm': 'fa-bolt',
-            'Snow': 'fa-snowflake',
-            'Mist': 'fa-smog'
-        };
-        return iconMap[condition] || 'fa-cloud';
-    }
-
-    function showLoading() {
-        loading.classList.remove('hidden');
-        loading.style.opacity = '1';
-    }
-
-    function hideLoading() {
-        loading.style.opacity = '0';
-        setTimeout(() => loading.classList.add('hidden'), 300);
-    }
-
-    function showWeatherCard() {
-        weatherCard.classList.remove('hidden');
-        setTimeout(() => weatherCard.style.opacity = '1', 50);
-    }
-
-    function hideWeatherCard() {
-        weatherCard.style.opacity = '0';
-        setTimeout(() => weatherCard.classList.add('hidden'), 300);
+    function displayWeatherData(data) {
+        const weatherIcon = getWeatherIcon(data.weather_condition);
+        weatherInfo.innerHTML = `
+            <h2>${data.city}</h2>
+            <div class="temperature">${data.temperature}°C</div>
+            <div class="weather-icon">${weatherIcon}</div>
+            <div class="weather-details">
+                <p><i class="fas fa-info-circle"></i> ${data.description}</p>
+                <p><i class="fas fa-tint"></i> Humidity: ${data.humidity}%</p>
+                <p><i class="fas fa-wind"></i> Wind Speed: ${data.wind_speed} m/s</p>
+            </div>
+        `;
+        weatherInfo.classList.remove('hidden');
+        updateLastUpdated();
     }
 
     function showError(message) {
-        errorMessage.textContent = message;
-        errorMessage.classList.remove('hidden');
-        setTimeout(() => errorMessage.style.opacity = '1', 50);
+        weatherInfo.innerHTML = `<p class="error-message"><i class="fas fa-exclamation-triangle"></i> Error: ${message}</p>`;
+        weatherInfo.classList.remove('hidden');
+        clearInterval(updateInterval);
     }
 
-    function hideError() {
-        errorMessage.style.opacity = '0';
-        setTimeout(() => errorMessage.classList.add('hidden'), 300);
+    function updateLastUpdated() {
+        const now = new Date();
+        lastUpdated.textContent = `Last updated: ${now.toLocaleTimeString()}`;
     }
 
-    // Add a new function to update the last updated time
-    function updateLastUpdatedTime() {
-        if (lastUpdated) {
-            const now = new Date();
-            lastUpdated.textContent = `Last updated: ${now.toLocaleTimeString()}`;
-            console.log("Last updated time set to:", lastUpdated.textContent);  // Debug log
-        } else {
-            console.error("Last updated element not found");  // Debug log
-        }
+    function getWeatherIcon(condition) {
+        const icons = {
+            'Clear': '<i class="fas fa-sun"></i>',
+            'Clouds': '<i class="fas fa-cloud"></i>',
+            'Rain': '<i class="fas fa-cloud-rain"></i>',
+            'Thunderstorm': '<i class="fas fa-bolt"></i>',
+            'Snow': '<i class="fas fa-snowflake"></i>',
+            'Mist': '<i class="fas fa-smog"></i>',
+            'Smoke': '<i class="fas fa-smog"></i>',
+            'Haze': '<i class="fas fa-smog"></i>',
+            'Dust': '<i class="fas fa-smog"></i>',
+            'Fog': '<i class="fas fa-smog"></i>',
+            'Sand': '<i class="fas fa-smog"></i>',
+            'Ash': '<i class="fas fa-smog"></i>',
+            'Squall': '<i class="fas fa-wind"></i>',
+            'Tornado': '<i class="fas fa-wind"></i>'
+        };
+        return icons[condition] || '<i class="fas fa-question-circle"></i>';
     }
 });
