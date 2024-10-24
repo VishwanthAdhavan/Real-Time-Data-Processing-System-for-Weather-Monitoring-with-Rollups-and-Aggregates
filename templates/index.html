@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Weather Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Indian Weather Dashboard</h1>
+            <div class="city-selector">
+                <form id="weather-form" method="POST">
+                    {{ csrf_token() }}
+                    <select id="city-select" name="city">
+                        <option value="">Choose a city</option>
+                        {% for city in cities %}
+                        <option value="{{ city }}">{{ city }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+        </header>
+        
+        <main>
+            <div id="weather-card" class="weather-card hidden">
+                <div class="weather-icon">
+                    <i id="weather-icon" class="fas"></i>
+                </div>
+                <h2 id="city-name"></h2>
+                <p id="temperature" class="temperature"></p>
+                <div class="weather-details">
+                    <p id="feels-like"></p>
+                    <p id="humidity"></p>
+                    <p id="wind-speed"></p>
+                    <p id="description"></p>
+                </div>
+                <p id="last-updated" class="last-updated"></p>
+            </div>
+            
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <p>Fetching weather data...</p>
+            </div>
+            
+            <div id="error-message" class="error-message hidden"></div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2023 Indian Weather Dashboard. Powered by OpenWeatherMap.</p>
+        </footer>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
