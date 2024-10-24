@@ -1,39 +1,19 @@
 # Indian Weather Dashboard
 
 ## Description
-Indian Weather Dashboard is a simple, user-friendly web application that provides real-time weather information for major cities in India. Built with Flask and powered by OpenWeatherMap API, this dashboard offers current temperature, humidity, wind speed, and weather descriptions for selected Indian cities.
+The Indian Weather Dashboard is a web application that provides real-time weather information for various cities in India. It offers a user-friendly interface to select a city and view current weather conditions, including temperature, humidity, wind speed, and weather description.
 
 ## Features
-- Real-time weather data for major Indian cities
-- User-friendly interface with a dropdown menu for city selection
-- Displays temperature, humidity, wind speed, and weather description
-- Auto-updates weather data every 5 minutes
-- Responsive design suitable for both desktop and mobile devices
+- Real-time weather data for Indian cities
+- Automatic updates every 5 minutes
+- Responsive design for desktop and mobile devices
+- Visual weather icons for easy interpretation
+- Error handling for failed API requests
 
-## File Structure
-```
-indian-weather-dashboard/
-│
-├── app.py                 # Main Flask application file
-├── .env                   # Environment variables (API keys)
-├── requirements.txt       # Python dependencies
-├── .gitignore             # Git ignore file
-├── README.md              # Project documentation
-│
-├── templates/             # (Optional) HTML templates
-│   └── index.html         # Main page template
-│
-├── static/                # (Optional) Static files
-│   ├── css/
-│   │   └── styles.css     # Custom CSS styles
-│   └── js/
-│       └── script.js      # Custom JavaScript
-│
-├── weather_utils.py       # (Optional) Utility functions for weather data
-└── config.py              # (Optional) Configuration settings
-```
-
-Note: Files and directories marked as (Optional) are not required for basic functionality but can be added for better code organization and scalability.
+## Technologies Used
+- Frontend: HTML, CSS, JavaScript
+- Backend: Python, Flask
+- API: OpenWeatherMap
 
 ## Installation
 
@@ -43,7 +23,7 @@ Note: Files and directories marked as (Optional) are not required for basic func
    cd indian-weather-dashboard
    ```
 
-2. Create a virtual environment and activate it:
+2. Set up a virtual environment:
    ```
    python -m venv venv
    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
@@ -61,7 +41,7 @@ Note: Files and directories marked as (Optional) are not required for basic func
 
 ## Usage
 
-1. Run the Flask application:
+1. Start the Flask server:
    ```
    python app.py
    ```
@@ -70,45 +50,33 @@ Note: Files and directories marked as (Optional) are not required for basic func
 
 3. Select a city from the dropdown menu to view its current weather information
 
-## Technologies Used
-- Python
-- Flask
-- Flask-WTF (for CSRF protection)
-- HTML/CSS
-- JavaScript
-- OpenWeatherMap API
+## Project Structure
 
-## Implementation Details
-- Flask is used as the web framework to handle routing and serve the application
-- Weather data is fetched from OpenWeatherMap API using the `requests` library
-- The frontend is built with HTML, CSS, and JavaScript, with dynamic updates using fetch API
-- Environment variables are used to securely store the API key
-- Auto-update functionality is implemented using JavaScript's `setInterval` function
+```
+indian-weather-dashboard/
+├── app.py
+├── src/
+│ ├── init.py
+│ ├── config.py
+│ └── weather_utils.py
+├── static/
+│ ├── css/
+│ │ └── styles.css
+│ └── js/
+│ └── script.js
+├── templates/
+│ └── index.html
+├── requirements.txt
+├── .env
+└── README.md
+```
 
-## Error Handling
-- API request errors are caught and displayed to the user
-- Invalid city selections are handled gracefully
-- Network errors during weather data fetching are caught and reported
+Note: Files and directories marked as (Optional) are not required for basic functionality but can be added for better code organization and scalability.
 
-## Implemented Protections
-- API key is stored as an environment variable to prevent exposure
-- Input validation is performed on the server-side to prevent injection attacks
-- HTTPS is recommended for production deployment to encrypt data in transit
-- CSRF protection is implemented using Flask-WTF to prevent cross-site request forgery attacks
 
-## Advantages of this Implementation
-- Separation of concerns between frontend and backend
-- Easy to maintain and extend with modular code structure
-- Responsive design works well on various device sizes
-- Real-time data updates provide current weather information
-- Minimal dependencies make the application lightweight and fast
-
-## Future Improvements
-- Add more cities or allow custom city input
-- Implement caching to reduce API calls and improve performance
-- Add historical weather data and forecasting
-- Improve UI/UX with weather icons and animations
-- Implement user accounts for saving favorite cities
+## Configuration
+- The list of available cities can be modified in `src/config.py`
+- API settings and other configurations are managed through environment variables in the `.env` file
 
 ## Contributing
 Contributions to improve the Indian Weather Dashboard are welcome. Please follow these steps:
@@ -120,10 +88,8 @@ Contributions to improve the Indian Weather Dashboard are welcome. Please follow
 5. Open a Pull Request
 
 ## License
-Distributed under the MIT License. See `LICENSE` for more information.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-
-## Acknowledgements
-- [OpenWeatherMap](https://openweathermap.org/)
-- [Flask](https://flask.palletsprojects.com/)
-- [Font Awesome](https://fontawesome.com)
+## Acknowledgments
+- Weather data provided by [OpenWeatherMap](https://openweathermap.org/)
+- Icons by [Font Awesome](https://fontawesome.com/)
