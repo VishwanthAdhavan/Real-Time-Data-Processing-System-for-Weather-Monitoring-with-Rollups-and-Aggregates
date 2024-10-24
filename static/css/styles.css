@@ -3,7 +3,7 @@
     --secondary-color: #138808;
     --background-color: #f0f8ff;
     --text-color: #333;
-    --card-background: rgba(255, 255, 255, 0.8);
+    --card-background: rgba(255, 255, 255, 0.9);
 }
 
 * {
@@ -20,6 +20,14 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    animation: gradientBG 15s ease infinite;
+    background-size: 400% 400%;
+}
+
+@keyframes gradientBG {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
 }
 
 .container {
@@ -77,6 +85,16 @@ main {
     width: 100%;
     max-width: 400px;
     transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .weather-card:hover {
