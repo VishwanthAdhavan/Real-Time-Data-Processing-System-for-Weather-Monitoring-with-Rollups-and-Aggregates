@@ -122,10 +122,6 @@ Contributions to improve the Indian Weather Dashboard are welcome. Please follow
 ## License
 Distributed under the MIT License. See `LICENSE` for more information.
 
-## Contact
-Your Name - [your-email@example.com](mailto:your-email@example.com)
-
-Project Link: [https://github.com/yourusername/indian-weather-dashboard](https://github.com/yourusername/indian-weather-dashboard)
 
 ## Acknowledgements
 - [OpenWeatherMap](https://openweathermap.org/)
